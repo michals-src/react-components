@@ -5,7 +5,7 @@
 export { default as List } from './list';
 export { default as Accordion } from './accordion';
 export { Carousel } from './carousel';
-export { default as Portal } from './portal';
+export { Portal } from './portal';
 //export { BottomSheet } from './bottomSheet';
 export { Slider } from './slider';
 //export { Picker } from './picker';

@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-import { Carousel, Accordion, List } from './react-components/src';
+import { Carousel, Accordion, List } from './react-components';
 import { ArrowsUpDownIcon } from '@heroicons/react/24/solid';
 
 function App() {
