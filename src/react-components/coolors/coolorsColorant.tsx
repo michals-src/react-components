@@ -1,7 +1,6 @@
-import { MouseEventHandler } from 'react';
-import { CheckCircleIcon, CheckIcon } from '@heroicons/react/24/solid';
-import classNames from 'classnames';
 import React from 'react';
+import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import classNames from 'classnames';
 
 type ColorsColorantProps = {
 	index?: number;
@@ -45,7 +44,7 @@ const ColorsColorant = (props: ColorsColorantProps) => {
 				<div
 					className={cnColorant}
 					style={{ backgroundColor: value }}>
-					<span className='absolute -top-[99999]'>{value}</span>
+					<span className='absolute -top-[99999]px -z-50'>{value}</span>
 				</div>
 				{isActive && <ActiveSymbol />}
 				<input

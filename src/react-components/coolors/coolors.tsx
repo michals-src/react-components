@@ -4,14 +4,14 @@ import classNames from 'classnames';
 import { colors } from './';
 import CoolorssColorant from './coolorsColorant';
 
-export type PaletteProps = {
+export type CoolorsProps = {
 	value: (typeof colors)[number];
 	onClick?: React.MouseEventHandler<HTMLInputElement>;
 	align?: 'start' | 'center' | 'end';
 	size?: 'sm' | 'md' | 'lg';
 };
 
-const Coolors = forwardRef<HTMLInputElement, PaletteProps & React.HTMLProps<HTMLInputElement>>((props, ref) => {
+const Coolors = forwardRef<HTMLInputElement, CoolorsProps & React.HTMLProps<HTMLInputElement>>((props, ref) => {
 	const { value, onClick, align = 'center', size = 'md' } = props;
 
 	const cnWrapper = classNames('flex flex-row flex-wrap mx-auto w-full h-auto relative', {

@@ -1,5 +1,4 @@
-import classNames from 'classnames';
-import React, { useState, useEffect, forwardRef, useRef, Ref, TouchEventHandler, MouseEventHandler } from 'react';
+import React, { useState, useEffect, forwardRef, useRef} from 'react';
 
 import { Slider } from '../';
 /**
@@ -14,12 +13,13 @@ import { Slider } from '../';
 
 export type PickerSelectProps = {
 	children: React.ReactNode;
-	onChange: (a: React.MouseEvent<HTMLInputElement>, b?: any) => void;
+	onChange: (a: React.MouseEvent<HTMLInputElement>, b?: React.ReactNode) => void;
 	value: any;
+	shadeColor?: string
 };
 
 const PickerSelect = forwardRef<HTMLDivElement, PickerSelectProps>(function PickerSelect(props, ref) {
-	const { children, onChange: onChangeCallback, value: defaultValue = 0, ...other } = props;
+	const { shadeColor = 'rgb(39 39 42)', children, onChange: onChangeCallback, value: defaultValue = 0, ...other } = props;
 
 	const [index, setIndex] = useState<number>(0);
 	const [translation, setTranslation] = useState<number>(0);
@@ -43,7 +43,7 @@ const PickerSelect = forwardRef<HTMLDivElement, PickerSelectProps>(function Pick
 		const nativeEvent = event.nativeEvent || event;
 		const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
 
-		Object.defineProperty(clonedEvent, 'target', {
+		Object.defineProperty(clonedEvent, 'currentTarget', {
 			writable: true,
 			value: { value: child.props.value },
 		});
@@ -82,7 +82,7 @@ const PickerSelect = forwardRef<HTMLDivElement, PickerSelectProps>(function Pick
 			<div
 				className='w-full h-[64px] absolute top-0 left-0 z-10'
 				style={{
-					background: 'linear-gradient(to bottom, rgb(39 39 42) 0%, rgba(24,24,27,0) 100%)',
+					background: `linear-gradient(to bottom, ${shadeColor} 0%, rgba(24,24,27,0) 100%)`,
 				}}></div>
 			<div className={`overflow-hidden h-[160px] px-3`}>
 				<div
@@ -100,7 +100,7 @@ const PickerSelect = forwardRef<HTMLDivElement, PickerSelectProps>(function Pick
 			<div
 				className='w-full h-[64px] absolute bottom-0 left-0 z-10'
 				style={{
-					background: 'linear-gradient(to top, rgb(39 39 42) 0%, rgba(0,0,0,0) 100%)',
+					background: `linear-gradient(to top, ${shadeColor} 0%, rgba(0,0,0,0) 100%)`,
 				}}></div>
 			<Slider
 				value={translation}
@@ -125,9 +125,6 @@ const PickerSelect = forwardRef<HTMLDivElement, PickerSelectProps>(function Pick
 				direction='y'
 				className='w-full h-full absolute left-0 top-0 touch-pan-x z-30'
 			/>
-			{/* <div
-				className='w-full h-full absolute left-0 top-0 touch-pan-x z-30 cursor-pointer'
-				{...touchEvents}></div> */}
 		</div>
 	);
 });

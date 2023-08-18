@@ -1,6 +1,1 @@
-import List from './list'
-import ListItem from './list-item'
-
-export default Object.assign(List, {
-    Item: ListItem
-})
+export {default as List} from './list';

@@ -1,12 +1,5 @@
 import React, { FC } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-
-const Kid = (props: any) => {
-	const { index, children } = props;
-	const childId = React.useCallback(() => uuidv4(), [index]);
-
-	return <></>;
-};
+import ListItem from './list-item'
 
 const List = ({ children }: any) => {
 	const items = children === undefined ? [] : Array.isArray(children) ? children : [children];
@@ -33,4 +26,6 @@ const List = ({ children }: any) => {
 	return <div className='w-full h-auto bg-slate-700 border border-slate-600 rounded-md text-slate-100'>{kids}</div>;
 };
 
-export default List;
+export default Object.assign(List, {
+	Item: ListItem
+});

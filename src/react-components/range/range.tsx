@@ -16,15 +16,15 @@ const Range = forwardRef<HTMLInputElement, RangeProps & React.HTMLProps<HTMLInpu
 	({ value = 0, onChange, onClick, step, thumb = true, variant = 'md', track = true, ...other }, ref) => {
 		const progressRef = useRef<HTMLDivElement>(null);
 		const thumbRef = useRef<HTMLDivElement>(null);
-		const [range, setRange] = useState<typeof value>(value ? value : 0);
 
-		const cnPlaceholder = classNames('slider--placeholder', {
+
+		const cnPlaceholder = classNames('w-full h-3 rounded-md bg-[rgba(0,0,0,.2)]', {
 			'h-1': variant === 'sm',
 			'h-3': variant === 'md',
 			'h-6': variant === 'lg',
 		});
 
-		const cnThumb = classNames('slider--thumb', {
+		const cnThumb = classNames('w-3 h-3 bg-white rounded-full absolute top-[50%] right-0 cursor-pointer', {
 			'w-2 h-2': variant === 'sm',
 			'w-4 h-4': variant === 'md',
 			'w-7 h-7': variant === 'lg',
@@ -45,31 +45,36 @@ const Range = forwardRef<HTMLInputElement, RangeProps & React.HTMLProps<HTMLInpu
 		const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 			if (!e.target) return;
 			e.target.focus();
-			setRange(parseInt(e.target.value, 10));
-			// if (typeof onChange !== 'undefined')
+
 			onChange?.(e);
 		};
 
 		return (
-			<div className='slider w-full touch-none'>
+			<div className='relative cursor-pointer w-full touch-none'>
 				<div className={cnPlaceholder}>
 					<div
 						ref={progressRef}
-						className={`slider--progress ${!track ? 'opacity-0' : ''}`}></div>
+						className={`absolute top-0 left-0 w-full h-full rounded-lg ${!track ? 'opacity-0' : ''}`}
+						style={{
+							background: `linear-gradient(to right, rgba(255, 255, 255, .1) 0%, rgba(255, 255, 255, .4) 100%`,
+						}}></div>
 				</div>
 				<div
 					ref={thumbRef}
-					className='slider--thumb--wrapper'>
+					className='absolute top-0 w-auto h-full pl-3'>
 					{thumb && (
 						<div
 							ref={thumbRef}
-							className={cnThumb}></div>
+							className={cnThumb}
+							style={{
+								transform: ` translateY(-50%)`,
+							}}></div>
 					)}
 				</div>
 
 				<input
 					type='range'
-					className='slider--input w-full touch-pan-x'
+					className='absolute top-0 bottom-0 left-0 right-0 opacity-0 h-full cursor-pointer w-full touch-pan-x'
 					value={value}
 					onClick={handleClick}
 					onChange={handleChange}

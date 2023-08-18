@@ -23,7 +23,7 @@ const CarouselItem = React.forwardRef<HTMLDivElement, CarouselItemProps>(functio
 				if (typeof ref === 'function') ref(element);
 				else if (ref) ref.current = element;
 			}}
-			className='w-auto h-full flex-[1_0_auto]'
+			className='w-auto h-full flex-[1_0_auto] select-none'
 			onClick={handleClick}
 			{...other}>
 			{children}
