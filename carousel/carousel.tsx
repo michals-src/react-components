@@ -1,0 +1,141 @@
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+
+import { Slider } from '../';
+import CarouseItem from './carousel-item';
+import CarouselIndicators from './carousel-indicators';
+
+export type CarouselProps = {
+	shade?: boolean;
+	shadeColor?: string;
+	indicators?: boolean;
+	children: React.ReactNode;
+};
+
+const Carousel = function Carousel(props: CarouselProps) {
+	const { shade = false, shadeColor = 'rgb(24,24,27)', indicators = false, children } = props;
+
+	const [moving, setMoving] = useState<boolean>(false);
+	const [index, setIndex] = useState<number>(0);
+	const [translation, setTranslation] = useState<number>(0);
+	//const [offsetLength, setOffsetLength] = useState<number>(0);
+
+	const [transformation, setTransformation] = useState<boolean>(false);
+
+	const refChildren = useRef<any>({});
+	const refWrapper = useRef<any>(null);
+
+	const items = Array.isArray(children) ? children : [children];
+	const kids = useCallback(() => {
+		return items.map((child, idx) => {
+			return React.cloneElement(child, {
+				key: idx,
+				ref: (el: any) => {
+					if (refChildren.current !== undefined) refChildren.current[idx] = el;
+				},
+				moving,
+				//onClick: (e: any) => {
+				//if (!moving && child.props.onClick !== undefined) child?.props?.onClick(e)
+				//}
+			});
+		});
+	}, [moving, children]);
+
+	useEffect(() => {
+		if (refWrapper.current === null) return;
+		const abc = function () {
+			setMoving(false);
+		};
+
+		refWrapper.current.addEventListener('transitionend', abc);
+
+		return function () {
+			if (refWrapper.current !== null) refWrapper.current.removeEventListener('transitionend', abc);
+		};
+	}, [refWrapper]);
+
+	const offsetX = useCallback(() => {
+		let value = 0;
+		for (let i = 0; i < index; i++) {
+			value += refChildren.current[i].offsetWidth;
+		}
+		return value;
+	}, [index]);
+
+	const offsetSize = React.useCallback(() => {
+		if (Object.keys(refChildren.current).length <= 0) return 0;
+
+		return refChildren.current[index] !== undefined && refChildren.current[index + 1] !== undefined && index < items.length - 1
+			? refChildren.current[index + 1].offsetWidth
+			: refChildren.current[index].offsetWidth;
+	}, [index, items, refChildren]);
+
+	return (
+		<div className='touch-pan-x'>
+			<div
+				ref={refWrapper}
+				className='w-full h-auto flex flex-col flex-nowrap flex-1 overflow-hidden relative'>
+				<Slider
+					value={translation}
+					offset={index}
+					//offsetInView={offsetLength / 4}
+					offsetInView={refChildren.current[index] !== undefined ? refChildren.current[index].offsetWidth / 3 : 10}
+					//offsetSize={offsetLength}
+					offsetSize={offsetSize()}
+					offsetMin={0}
+					offsetMax={items.length - 1}
+					direction='x'
+					onDown={(e: any) => {
+						//setMoving(true)
+					}}
+					onMove={(e: any, translate: number) => {
+						if (!moving) setMoving(true);
+						if (!transformation) setTransformation(true);
+						setTranslation(translate);
+					}}
+					onLeave={(e: any, offset: number, swipeDir: string) => {
+						//setMoving(false);
+						setTransformation(false);
+						setIndex((state) => {
+							if (state === offset) {
+								setMoving(false);
+							}
+							return offset;
+						});
+						setTranslation(0);
+					}}>
+					<div
+						className='flex flex-row flex-nowrap'
+						style={{
+							transitionProperty: 'transform',
+							//transitionDuration: moving ? '0s' : '0.3s',
+							transitionDuration: transformation ? '0s' : '0.3s',
+							transitionTimingFunction: 'ease',
+							//transform: `translateX(-${offsetLength * index + translation}px)`,
+							transform: `translateX(-${offsetX() + translation}px)`,
+						}}>
+						{kids()}
+						{/* {children} */}
+					</div>
+					{shade && (
+						<div
+							className='absolute top-0 right-0 w-[15%] h-full'
+							style={{
+								background: `linear-gradient(to right, rgba(0,0,0,0) 0%, ${shadeColor} 100%)`,
+							}}></div>
+					)}
+				</Slider>
+				{indicators && (
+					<CarouselIndicators
+						onChange={(e: any) => setIndex(e.target.value)}
+						value={index}
+						length={items.length}
+					/>
+				)}
+			</div>
+		</div>
+	);
+};
+
+export default Object.assign(Carousel, {
+	Item: CarouseItem,
+});
